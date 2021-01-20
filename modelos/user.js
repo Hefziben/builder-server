@@ -3,23 +3,16 @@ const Schema  = mongoose.Schema;
 
 const userSchema = new Schema(
     [{
-    nombre: { type: String,  },
-    imagen:{ type: String, default:'' },
-    apellido:{ type: String },
-    contrasena: { type: String },
-    region:{ type: String },
+    name: { type: String,  },
+    lastName: { type: String},
+    userName:{ type: String},
+    password:{ type: String},
+    type:{ type: String },
+    birthday: { type: String },
+    birthPlace:{ type: String },
     email:{ type: String },
-    telefono:{ type: String },    
-    cupones:[{
-        id:{ type: String },
-        imagen:{ type: String },
-        categoria:{ type: String },
-        cangeado:{ type: Boolean},        
-    }],
-    intereses:[{
-        name:{ type: String },
-        selected:{ type: Boolean }        
-    }]
+    phone:{ type: String },
+    address:{ type: String }
 }]);
 
 const User = mongoose.model('User', userSchema);

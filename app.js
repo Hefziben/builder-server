@@ -7,18 +7,19 @@ var logger = require('morgan');
 require("./database");
 
 var indexRouter = require('./routes/index');
-var comercioRouter = require('./routes/comercio');
+var formRouter = require('./routes/form');
 var userRouter = require('./routes/user');
-var promoRouter = require('./routes/promo');
-var interesRouter = require('./routes/interes');
+var categoryRouter = require('./routes/category');
+var typeRouter = require('./routes/type');
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-// app.use(cors({
-//   origin: 'https://binndy.com' 
-// }));
+app.use(cors({
+  origin: 'http://localhost:8100' 
+  
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -26,10 +27,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 app.use('/', indexRouter);
-app.use('/comercio', comercioRouter);
+app.use('/form', formRouter);
 app.use('/user', userRouter);
-app.use('/promo', promoRouter);
-app.use('/interes', interesRouter);
+app.use('/category', categoryRouter);
+app.use('/type', typeRouter);
+
+
+
 app.use(express.static('public'))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
