@@ -12,6 +12,7 @@ var userRouter = require('./routes/user');
 var categoryRouter = require('./routes/category');
 var typeRouter = require('./routes/type');
 var app = express();
+app.listen(8047,'127.0.0.1')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
