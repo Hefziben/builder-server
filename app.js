@@ -12,13 +12,12 @@ var userRouter = require('./routes/user');
 var categoryRouter = require('./routes/category');
 var typeRouter = require('./routes/type');
 var app = express();
-app.listen(8047,'127.0.0.1')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(cors({
-  origin: 'http://localhost:8100' 
+  origin: 'http://47.250.41.158' 
   
 }));
 app.use(logger('dev'));
