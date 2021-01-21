@@ -9,6 +9,7 @@ const formSchema = new Schema(
     owner: { type: String},
     userTypes:[],
     values:[],
+    tags:[],
     status: { type: String, default:'Active'}
 }]);    
 
