@@ -17,7 +17,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(cors({
-  origin: 'http://47.250.41.158' 
+  origin: '*' 
   
 }));
 app.use(logger('dev'));
