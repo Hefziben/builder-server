@@ -11,6 +11,8 @@ var formRouter = require('./routes/form');
 var userRouter = require('./routes/user');
 var categoryRouter = require('./routes/category');
 var typeRouter = require('./routes/type');
+var idRouter = require('./routes/id');
+var formDataRouter = require('./routes/formData');
 var app = express();
 
 // view engine setup
@@ -31,6 +33,9 @@ app.use('/form', formRouter);
 app.use('/user', userRouter);
 app.use('/category', categoryRouter);
 app.use('/type', typeRouter);
+app.use('/id_validation', idRouter);
+app.use('/formData', formDataRouter);
+
 
 
 

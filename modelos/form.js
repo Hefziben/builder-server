@@ -1,9 +1,11 @@
-mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Schema  = mongoose.Schema;
 
 const formSchema = new Schema(
     [{
-    title: { type: String,  },
+    formId: { type: String},    
+    title: { type: String},
+    password: { type: String},
     category: { type: String},
     subcategory: { type: String},
     owner: { type: String},

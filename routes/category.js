@@ -19,7 +19,7 @@ const upload = multer({
 router.get("/", function(req, res, next) {
   Category.find({}, (err, categoryes) => {
     if (res.status == 400) {
-      res.send({ mensaje: "error en la petición", res: status, err });
+      res.send({ mensaje: "error in request", res: status, err });
     } else {
       res.send(categoryes);
     }

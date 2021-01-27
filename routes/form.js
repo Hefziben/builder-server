@@ -51,6 +51,17 @@ router.get("/:id", (req, res) => {
     .catch(err => res.status(400).send(err));
 });
 
+router.get("/formId:id", (req, res) => {
+  var id = req.params.id;
+  Form.findOne({formId:id}, (err, response) => {
+    if (res.status == 400) {
+      res.send({ mensaje: "error in request", res: status, err });
+    } else {
+      res.send(response);
+     }
+  });
+});
+
 //Update Form
 router.put("/:id", (req, res) => {
   const formId = req.params.id;

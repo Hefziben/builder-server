@@ -1,4 +1,4 @@
-mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Schema  = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -12,6 +12,8 @@ const userSchema = new Schema(
     birthPlace:{ type: String },
     email:{ type: String },
     phone:{ type: String },
+    countryCode:{ type: String, default:'+63'},
+    countryName:{ type: String, default:'Philippines'},
     address:{ type: String }
 }]);
 
