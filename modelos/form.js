@@ -12,6 +12,7 @@ const formSchema = new Schema(
     userTypes:[],
     values:[],
     tags:[],
+    sharelink:{ type: String},
     status: { type: String, default:'Active'}
 }]);    
 
