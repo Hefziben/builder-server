@@ -12,8 +12,10 @@ const formSchema = new Schema(
     userTypes:[],
     values:[],
     tags:[],
-    sharelink:{ type: String},
-    status: { type: String, default:'Active'}
+    template:{ type: Boolean, default:false},
+    status: { type: String, default:'Active'},
+    function:{},
+    functionResult:{}
 }]);    
 
 const Form = mongoose.model('Form', formSchema);

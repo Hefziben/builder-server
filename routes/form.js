@@ -30,7 +30,9 @@ router.get("/", function(req, res, next) {
 
 //add form 
 router.post("/", (req, res) => {
+  console.log(req.body);
     const crearForm = new Form(req.body);
+  
     crearForm.save((err, new_Form) => {
       if (err) {
         errMsj = err.form;
@@ -51,7 +53,7 @@ router.get("/:id", (req, res) => {
     .catch(err => res.status(400).send(err));
 });
 
-router.get("/formId:id", (req, res) => {
+router.get("/formId/:id", (req, res) => {
   var id = req.params.id;
   Form.findOne({formId:id}, (err, response) => {
     if (res.status == 400) {

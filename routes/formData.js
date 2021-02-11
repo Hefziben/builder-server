@@ -44,8 +44,8 @@ router.get("/formId/:id", function(req, res, next) {
 //add formData
 router.post("/", (req, res) => {
   const formData = req.body;
-  const createFormData = new FormData(formData);
-  createFormData.save((err, new_FormData) => {
+  const new_FormData = new FormData(formData);
+  new_FormData.save((err, response) => {
     if (err) {
       errMsj = err.message;
 
@@ -56,27 +56,32 @@ router.post("/", (req, res) => {
   });
 });
 
-router.post("/", upload.single("file_path"), (req, res) => {
+router.post("/file/", upload.fields([{
+  name: 'signature', maxCount: 1
+}, {
+  name: 'file', maxCount: 1
+}]), (req, res) => {
   
-  const file = req.file;
-  const promo = req.body;
-  const nuevaPromo = {
-    comercio: promo.comercio,
-    validez: promo.validez,
-    codigo: promo.codigo,
-    categoria:promo.categoria,
-    ubicacion: [{lat:Number(promo.lat),lng:Number(promo.lng)}],
-    imagen: file.path,
-       };
-  console.log(nuevaPromo);
-  const crearPromo = new Promo(nuevaPromo);
-  crearPromo.save((err, nuevo_Promo) => {
+  const files = req.files;
+  const signature = files.signature[0].path;
+  const postdata = JSON.parse(req.body.formData);
+  postdata.formData.signature = signature;
+  const fileExist = postdata.file in postdata.formData;
+  if (fileExist && files.file) {
+    postdata.formData[postdata.file] = files.file[0].path
+  }
+  console.log(files);
+  console.log(postdata);
+  const new_FormData = new FormData(postdata);
+  console.log(new_FormData);
+  new_FormData.save((err, response) => {
     if (err) {
+      console.log(err);
       errMsj = err.message;
 
       res.send(errMsj);
     } else {
-      res.send({ msg:"Promo guardado con exito", id:nuevo_Promo});
+      res.send({ msg:"FormData save success", data:response});
     }
   });
 });
@@ -106,7 +111,7 @@ router.get("/:id", (req, res) => {
 //delete formData
 router.delete("/:id", (req, res) => {
   const formData = req.params.id;
-  FormData.findByFormDataAndDelete(formData)
+  FormData.findByIdAndDelete(formData)
     .then(data => res.status(200).send("formData deleted"))
     .catch(err => res.status(400).send(err.message));
 });

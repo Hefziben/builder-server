@@ -26,6 +26,18 @@ router.get("/", function(req, res, next) {
   });
 });
 
+router.get("/email/:id", (req, res) => {
+  var email = req.params.id;
+  console.log(email);
+  User.findOne({email:email}, (err, response) => {
+    if (res.status == 400) {
+      res.send({ mensaje: "error in request", res: status, err });
+    } else {
+      res.send(response);
+     }
+  });
+});
+
 //create a new user
 router.post("/", (req, res) => {
   const newUser = req.body;

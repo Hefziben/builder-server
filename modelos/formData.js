@@ -3,6 +3,7 @@ const Schema  = mongoose.Schema;
 
 const formDataSchema = new Schema(
     [{
+    file: { type: String},
     formData: { type: Object}
 }]);
 
