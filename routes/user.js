@@ -26,18 +26,6 @@ router.get("/", function(req, res, next) {
   });
 });
 
-router.get("/email/:id", (req, res) => {
-  var email = req.params.id;
-  console.log(email);
-  User.findOne({email:email}, (err, response) => {
-    if (res.status == 400) {
-      res.send({ mensaje: "error in request", res: status, err });
-    } else {
-      res.send(response);
-     }
-  });
-});
-
 //create a new user
 router.post("/", (req, res) => {
   const newUser = req.body;
@@ -59,6 +47,18 @@ router.get("/:id", (req, res) => {
     .exec()
     .then(data => res.status(200).send(data))
     .catch(err => res.status(400).send(err));
+});
+router.post("/email/", (req, res) => {
+  var params = req.body;
+  
+  console.log(params);
+  User.findOne({email:params.email}, (err, response) => {
+    if (res.status == 400) {
+      res.send({ mensaje: "error in request", res: status, err });
+    } else {
+      res.send(response);
+     }
+  });
 });
 //Update User
 router.put("/:id", (req, res) => {
