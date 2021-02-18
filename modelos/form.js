@@ -14,6 +14,7 @@ const formSchema = new Schema(
     tags:[],
     template:{ type: Boolean, default:false},
     status: { type: String, default:'Active'},
+    formType:{ type: String, default:'Public'},
     function:{},
     functionResult:{}
 }]);    
