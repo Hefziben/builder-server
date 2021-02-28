@@ -100,6 +100,12 @@ libre.convert(file, extend, undefined, (err, done) => {
     console.log(`Error converting file: ${err}`);
   }
   fs.writeFileSync(`downloads/${docNombre}`, done);
+     if (res.status == 400) {
+      res.send({ mensaje: "error in request", res: status, err });
+    } else {
+      res.send({message:"FormData save success",data:`downloads/${docNombre}`,result:done});
+    }
+  
 });
   // docxConverter(signature,`downloads/${docNombre}`,function(err,result){
   //   if(err){
