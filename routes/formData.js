@@ -99,7 +99,7 @@ libre.convert(file, extend, undefined, (err, done) => {
   if (err) {
     console.log(`Error converting file: ${err}`);
   }
-  fs.writeFileSync(outputPath, done);
+  fs.writeFileSync(`downloads/${docNombre}`, done);
 });
   // docxConverter(signature,`downloads/${docNombre}`,function(err,result){
   //   if(err){
