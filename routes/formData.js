@@ -5,6 +5,8 @@ const multer = require("multer");
 const path = require('path');
 const fs = require('fs');
 const libre = require('libreoffice-convert');
+var docxConverter = require('docx-pdf');
+
 const extend = '.pdf'
 
 
@@ -97,32 +99,33 @@ router.post("/download/", download.fields([{
   const cleanFecha = date.replace(/\\|\//g,'')
   const number = Math.floor(Math.random() * 1000) + 1;   
   const docNombre = cleanFecha + number + ".pdf";
-  const signature = files.template[0].path;
- const file = fs.readFileSync(signature);
+  const template = `${files.template[0].path}.docx`;  
+  
+  fs.rename(files.template[0].path, `${files.template[0].path}.docx`, function(err) {
+    if ( err ) console.log('ERROR: ' + err);
+    const file = fs.readFileSync(template);
 libre.convert(file, extend, undefined, (err, done) => {
     if (err) {
       console.log(`Error converting file: ${err}`);
     }
     
-    // Here in done you have pdf file which you can save or transfer in another stream
-    fs.writeFileSync(`downloads/${docNombre}`, done);
-        if (res.status == 400) {
-      res.send({ mensaje: "error in request", res: status, err });
+    fs.writeFileSync(docNombre, done);
+    if (err) {
+      errMsj = err.message;
+
+      res.send(errMsj);
     } else {
-      res.send({message:"FormData save success",data:`downloads/${docNombre}`,result:done});
+      res.send({message:"FormData save success",data:donde, result:docNombre});
     }
 });
-  // docxConverter(signature,`downloads/${docNombre}`,function(err,result){
-  //   if(err){
-  //     console.log(err);
-  //   }
-  //   console.log(result);
-  //   if (res.status == 400) {
-  //     res.send({ mensaje: "error in request", res: status, err });
-  //   } else {
-  //     res.send({message:"FormData save success",data:`downloads/${docNombre}`,result:result});
-  //   }
-  // });
+});
+
+
+ 
+
+    
+  
+    
   
 
 });
