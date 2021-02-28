@@ -4,9 +4,7 @@ var FormData = require("../modelos/formData");
 const multer = require("multer");
 const path = require('path');
 const fs = require('fs');
-var request = require('request'),
-const libre = require('libreoffice-convert');
-var docxConverter = require('docx-pdf');
+const request = require('request');
 
 const extend = '.pdf'
 
