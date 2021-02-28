@@ -99,25 +99,16 @@ router.post("/download/", download.fields([{
   const cleanFecha = date.replace(/\\|\//g,'')
   const number = Math.floor(Math.random() * 1000) + 1;   
   const docNombre = cleanFecha + number + ".pdf";
-  const template = `${files.template[0].path}.docx`;  
-  
+  const template = `${files.template[0].path}.docx`;    
   fs.rename(files.template[0].path, `${files.template[0].path}.docx`, function(err) {
-    if ( err ) console.log('ERROR: ' + err);
-    const file = fs.readFileSync(template);
-libre.convert(file, extend, undefined, (err, done) => {
-    if (err) {
-      console.log(`Error converting file: ${err}`);
-    }
-    
-    fs.writeFileSync(docNombre, done);
-    if (err) {
+      if (err) {
       errMsj = err.message;
 
       res.send(errMsj);
     } else {
-      res.send({message:"FormData save success",data:done, result:docNombre});
+      res.send({message:"FormData save success",data:template});
     }
-});
+
 });
 
 
