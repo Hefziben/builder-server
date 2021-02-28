@@ -61,30 +61,18 @@ router.get("/formId/:id", function(req, res, next) {
 
 //add formData
 router.post("/", (req, res) => {
-  const date = new Date().toLocaleDateString();
-  const cleanFecha = date.replace(/\\|\//g,'')
-  const number = Math.floor(Math.random() * 1000) + 1;   
-  const docNombre = cleanFecha + number + ".pdf";
   const formData = req.body;
   console.log(formData.template);
   const new_FormData = new FormData(formData);
-  const sourceFilePath = path.resolve(formData.template);
-const outputFilePath = path.resolve(`${formData.template}.pdf`);
-docxConverter(formData.template,`uploads/${docNombre}`,function(err,result){
-  if(err){
-    console.log(err);
-  }
-  console.log(result);
   new_FormData.save((err, response) => {
     if (err) {
       errMsj = err.message;
 
       res.send(errMsj);
     } else {
-      res.send({message:"FormData save success",data:`uploads/${docNombre}`});
+      res.send({message:"FormData save success"});
     }
   });
-});
 
  
   
