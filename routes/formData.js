@@ -4,6 +4,9 @@ var FormData = require("../modelos/formData");
 const multer = require("multer");
 const path = require('path');
 const fs = require('fs');
+const libre = require('libreoffice-convert');
+const extend = '.pdf'
+
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -95,17 +98,20 @@ router.post("/download/", download.fields([{
   const number = Math.floor(Math.random() * 1000) + 1;   
   const docNombre = cleanFecha + number + ".pdf";
   const signature = files.template[0].path;
-
-// Read file
-const file = fs.readFileSync(signature);
-unoconv
-  .convert(signature, `downloads/${docNombre}`)
-  .then(result => {
-    console.log(result); // return outputFilePath
-  })
-  .catch(err => {
-    console.log(err);
-  });
+ const file = fs.readFileSync(signature);
+libre.convert(file, extend, undefined, (err, done) => {
+    if (err) {
+      console.log(`Error converting file: ${err}`);
+    }
+    
+    // Here in done you have pdf file which you can save or transfer in another stream
+    fs.writeFileSync(`downloads/${docNombre}`, done);
+        if (res.status == 400) {
+      res.send({ mensaje: "error in request", res: status, err });
+    } else {
+      res.send({message:"FormData save success",data:`downloads/${docNombre}`,result:done});
+    }
+});
   // docxConverter(signature,`downloads/${docNombre}`,function(err,result){
   //   if(err){
   //     console.log(err);
