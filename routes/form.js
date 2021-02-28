@@ -3,6 +3,7 @@ var router = express.Router();
 var Form = require("../modelos/form");
 const multer = require("multer");
 
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, "uploads");
@@ -39,11 +40,34 @@ router.post("/", (req, res) => {
   
         res.send(errMsj);
       } else {
-        res.send("Form save sucess");
+        res.send("Form save success");
       }
     });
   
 });
+
+router.post("/file/", upload.single("file_path"), (req, res) => {
+  const file = req.file;  
+  const form = req.body;
+  form.userTypes = JSON.parse(req.body.userTypes);
+  form.values = JSON.parse(req.body.values);
+  form.tags = JSON.parse(req.body.tags);
+  form.template = JSON.parse(req.body.template);
+
+  form.templateDoc = file.path
+  console.log(form);
+  const createForm = new Form(form);
+  createForm.save((err, newForm) => {
+    if (err) {
+      errMsj = err.message;
+
+      res.send(errMsj);
+    } else {
+      res.send({ msg:"Form save sucess"});
+    }
+  });
+});
+
 //get form by ID
 router.get("/:id", (req, res) => {
   var formId = req.params.id;
@@ -71,6 +95,21 @@ router.put("/:id", (req, res) => {
 
   Form.findByIdAndUpdate(formId, { $set: req.body }, { new: true })
     .then(data => res.status(200).send("Updated"))
+    .catch(err => res.status(400).send(err));
+});
+router.put("/file/:id", upload.single("file_path"), (req, res) => {
+  const formId = req.params.id;
+  const file = req.file;  
+  const form = req.body;
+  form.userTypes = JSON.parse(req.body.userTypes);
+  form.values = JSON.parse(req.body.values);
+  form.tags = JSON.parse(req.body.tags);
+  form.template = JSON.parse(req.body.template);
+
+  form.templateDoc = file.path
+  console.log(form);
+  Form.findByIdAndUpdate(formId, { $set: form }, { new: true })
+    .then(data => res.status(200).send("form uddated"))
     .catch(err => res.status(400).send(err));
 });
 

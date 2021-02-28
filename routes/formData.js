@@ -2,6 +2,11 @@ var express = require("express");
 var router = express.Router();
 var FormData = require("../modelos/formData");
 const multer = require("multer");
+const path = require('path');
+const unoconv = require('awesome-unoconv');
+var docxConverter = require('docx-pdf');
+const libre = require('libreoffice-convert');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -11,8 +16,19 @@ const storage = multer.diskStorage({
     cb(null, new Date().getTime() + file.originalname);
   }
 });
+const storage_2 = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "downloads");
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().getTime() + file.originalname);
+  }
+});
 const upload = multer({
   storage: storage
+});
+const download = multer({
+  storage: storage_2
 });
 
 
@@ -43,7 +59,12 @@ router.get("/formId/:id", function(req, res, next) {
 
 //add formData
 router.post("/", (req, res) => {
+  const date = new Date().toLocaleDateString();
+  const cleanFecha = date.replace(/\\|\//g,'')
+  const number = Math.floor(Math.random() * 1000) + 1;   
+  const docNombre = cleanFecha + number + ".pdf";
   const formData = req.body;
+  console.log(formData.template);
   const new_FormData = new FormData(formData);
   new_FormData.save((err, response) => {
     if (err) {
@@ -51,9 +72,48 @@ router.post("/", (req, res) => {
 
       res.send(errMsj);
     } else {
-      res.send("FormData save success");
+      res.send({message:"FormData save success"});
     }
   });
+
+
+ 
+  
+});
+
+router.post("/download/", download.fields([{
+  name: 'template', maxCount: 1
+}]), (req, res) => {
+  
+  const files = req.files;
+  const date = new Date().toLocaleDateString();
+  const cleanFecha = date.replace(/\\|\//g,'')
+  const number = Math.floor(Math.random() * 1000) + 1;   
+  const docNombre = cleanFecha + number + ".pdf";
+  const signature = files.template[0].path;
+
+// Read file
+const extend = '.pdf'
+const file = fs.readFileSync(signature);
+libre.convert(file, extend, undefined, (err, done) => {
+  if (err) {
+    console.log(`Error converting file: ${err}`);
+  }
+  fs.writeFileSync(outputPath, done);
+});
+  // docxConverter(signature,`downloads/${docNombre}`,function(err,result){
+  //   if(err){
+  //     console.log(err);
+  //   }
+  //   console.log(result);
+  //   if (res.status == 400) {
+  //     res.send({ mensaje: "error in request", res: status, err });
+  //   } else {
+  //     res.send({message:"FormData save success",data:`downloads/${docNombre}`,result:result});
+  //   }
+  // });
+  
+
 });
 
 router.post("/file/", upload.fields([{
@@ -63,8 +123,10 @@ router.post("/file/", upload.fields([{
 }]), (req, res) => {
   
   const files = req.files;
+  console.log(files);
   const signature = files.signature[0].path;
   const postdata = JSON.parse(req.body.formData);
+  console.log(postdata);
   postdata.formData.signature = signature;
   const fileExist = postdata.file in postdata.formData;
   if (fileExist && files.file) {

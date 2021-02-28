@@ -16,7 +16,8 @@ const formSchema = new Schema(
     status: { type: String, default:'Active'},
     formType:{ type: String, default:'Public'},
     function:{},
-    functionResult:{}
+    functionResult:{},
+    templateDoc:{ type: String},
 }]);    
 
 const Form = mongoose.model('Form', formSchema);
