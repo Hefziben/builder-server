@@ -3,9 +3,6 @@ var router = express.Router();
 var FormData = require("../modelos/formData");
 const multer = require("multer");
 const path = require('path');
-const unoconv = require('awesome-unoconv');
-var docxConverter = require('docx-pdf');
-const libre = require('libreoffice-convert');
 const fs = require('fs');
 
 const storage = multer.diskStorage({
@@ -66,16 +63,23 @@ router.post("/", (req, res) => {
   const formData = req.body;
   console.log(formData.template);
   const new_FormData = new FormData(formData);
+  const sourceFilePath = path.resolve(formData.template);
+const outputFilePath = path.resolve(`${formData.template}.pdf`);
+docxConverter(formData.template,`uploads/${docNombre}`,function(err,result){
+  if(err){
+    console.log(err);
+  }
+  console.log(result);
   new_FormData.save((err, response) => {
     if (err) {
       errMsj = err.message;
 
       res.send(errMsj);
     } else {
-      res.send({message:"FormData save success"});
+      res.send({message:"FormData save success",data:`uploads/${docNombre}`});
     }
   });
-
+});
 
  
   
@@ -93,20 +97,15 @@ router.post("/download/", download.fields([{
   const signature = files.template[0].path;
 
 // Read file
-const extend = '.pdf'
 const file = fs.readFileSync(signature);
-libre.convert(file, extend, undefined, (err, done) => {
-  if (err) {
-    console.log(`Error converting file: ${err}`);
-  }
-  fs.writeFileSync(`downloads/${docNombre}`, done);
-     if (res.status == 400) {
-      res.send({ mensaje: "error in request", res: status, err });
-    } else {
-      res.send({message:"FormData save success",data:`downloads/${docNombre}`,result:done});
-    }
-  
-});
+unoconv
+  .convert(signature, `downloads/${docNombre}`)
+  .then(result => {
+    console.log(result); // return outputFilePath
+  })
+  .catch(err => {
+    console.log(err);
+  });
   // docxConverter(signature,`downloads/${docNombre}`,function(err,result){
   //   if(err){
   //     console.log(err);
