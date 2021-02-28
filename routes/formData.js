@@ -4,6 +4,7 @@ var FormData = require("../modelos/formData");
 const multer = require("multer");
 const path = require('path');
 const fs = require('fs');
+var request = require('request'),
 const libre = require('libreoffice-convert');
 var docxConverter = require('docx-pdf');
 
@@ -89,15 +90,23 @@ router.post("/download/", download.fields([{
   const docNombre = cleanFecha + number + ".pdf";
   const template = `${files.template[0].path}.docx`;    
   fs.rename(files.template[0].path, `${files.template[0].path}.docx`, function(err) {
-      if (err) {
-      errMsj = err.message;
+    var apiKey = '028d03efb6ab0dd6cae46bf058ec117a24f4a84d',
+    formData = {
+        target_format: 'pdf',
+        source_file: fs.createReadStream(template)
+    };
 
-      res.send(errMsj);
+request.post({url:'https://sandbox.zamzar.com/v1/jobs/', formData: formData}, function (err, response, body) {
+    if (err) {
+        console.error('Unable to start conversion job', err);
+        res.send(err);
     } else {
-      res.send({message:"FormData save success",data:template});
+        res.send({message:"FormData save success",data:JSON.parse(body)});
     }
+}).auth(apiKey, '', true);
 
 });
+
 
 
  
